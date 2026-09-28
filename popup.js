@@ -1,5 +1,5 @@
-// ProposalPilot - Popup Controller
-// Intelligent pitch generation, tone adaptation, profile customization, license validation
+// ProposalPilot - Enhanced Popup Controller
+// Client Trust Scanner, Screening Question Auto-Answerer, Tone Switching, Profile Integration
 
 document.addEventListener('DOMContentLoaded', async () => {
   const statusBar = document.getElementById('statusBar');
@@ -12,6 +12,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const proposalOutput = document.getElementById('proposalOutput');
   const wordCount = document.getElementById('wordCount');
   const openDemoBtn = document.getElementById('openDemoBtn');
+
+  // Client Audit Elements
+  const auditBadge = document.getElementById('auditBadge');
+  const auditMetrics = document.getElementById('auditMetrics');
+  const auditWarning = document.getElementById('auditWarning');
+
+  // Switch tabs
+  const tabProposalBtn = document.getElementById('tabProposalBtn');
+  const tabQuestionsBtn = document.getElementById('tabQuestionsBtn');
+  const proposalSection = document.getElementById('proposalSection');
+  const questionsSection = document.getElementById('questionsSection');
+  const questionsList = document.getElementById('questionsList');
+  const questionCountNumber = document.getElementById('questionCountNumber');
 
   // Action buttons
   const copyProposalBtn = document.getElementById('copyProposalBtn');
@@ -39,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const licenseStatus = document.getElementById('licenseStatus');
 
   let activeJob = null;
-  let currentTone = 'concise'; // 'concise' | 'technical' | 'results'
+  let currentTone = 'concise';
   let userProfile = { name: '', role: '', portfolio: '' };
   let isProUser = false;
   let dailyUsageCount = 0;
@@ -123,6 +136,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('demo-test.html') });
   });
 
+  // Switch between Proposal and Screening Questions
+  tabProposalBtn.addEventListener('click', () => {
+    tabProposalBtn.classList.add('active');
+    tabQuestionsBtn.classList.remove('active');
+    proposalSection.style.display = 'block';
+    questionsSection.style.display = 'none';
+  });
+
+  tabQuestionsBtn.addEventListener('click', () => {
+    tabQuestionsBtn.classList.add('active');
+    tabProposalBtn.classList.remove('active');
+    proposalSection.style.display = 'none';
+    questionsSection.style.display = 'block';
+    renderScreeningQuestions();
+  });
+
   // Proposal Generation Algorithm
   function generatePitch(job, tone) {
     if (!job) return;
@@ -150,6 +179,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     proposalOutput.value = draft.trim();
     updateWordCount();
 
+    // Cache draft for in-page Upwork insertion
+    chrome.storage.local.set({ proposal_pilot_last_draft: draft.trim() });
+
     // Increment daily usage
     if (!isProUser) {
       dailyUsageCount++;
@@ -167,6 +199,61 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   proposalOutput.addEventListener('input', updateWordCount);
+
+  // Screening Questions Auto-Answerer
+  function renderScreeningQuestions() {
+    questionsList.innerHTML = '';
+    const questions = activeJob?.screeningQuestions || [];
+
+    if (questions.length === 0) {
+      questionsList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-tertiary);">No screening questions required on this job post.</div>';
+      return;
+    }
+
+    questions.forEach((q, idx) => {
+      const isLocked = !isProUser && idx > 0;
+      const card = document.createElement('div');
+      card.className = 'question-card';
+
+      let answer = `Yes, I have implemented this previously using ${activeJob.skills[0] || 'modern frameworks'}. I ensure clean documentation and thorough testing so the handoff is seamless.`;
+      if (q.toLowerCase().includes('challenge') || q.toLowerCase().includes('difficult')) {
+        answer = `The primary focus will be data formatting edge cases and error handling. I address this upfront with automated validation schemas.`;
+      } else if (q.toLowerCase().includes('similar') || q.toLowerCase().includes('past work')) {
+        answer = `I recently built a comparable solution. You can review my work at ${userProfile.portfolio || 'my portfolio link'}.`;
+      }
+
+      if (isLocked) {
+        card.innerHTML = `
+          <div class="question-q">${q}</div>
+          <div style="font-size: 11px; color: var(--text-tertiary); padding: 8px 0;">
+            🔒 Locked on Free tier. <a href="#" class="pro-link" id="unlockQuestionsBtn">Upgrade to Pro ($4.99)</a> to auto-answer all client screening questions.
+          </div>
+        `;
+        card.querySelector('#unlockQuestionsBtn')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          showUpgrade();
+        });
+      } else {
+        card.innerHTML = `
+          <div class="question-q">${q}</div>
+          <div class="question-a">${answer}</div>
+          <div class="question-actions">
+            <button class="copy-mini-btn" id="copyAns_${idx}">Copy Answer</button>
+          </div>
+        `;
+
+        card.querySelector(`#copyAns_${idx}`)?.addEventListener('click', () => {
+          navigator.clipboard.writeText(answer).then(() => {
+            const btn = card.querySelector(`#copyAns_${idx}`);
+            btn.innerText = 'Copied';
+            setTimeout(() => btn.innerText = 'Copy Answer', 1500);
+          });
+        });
+      }
+
+      questionsList.appendChild(card);
+    });
+  }
 
   // Tone Tabs
   document.querySelectorAll('.tone-tab').forEach(tabBtn => {
@@ -212,6 +299,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       jobTitle.innerText = activeJob.title;
       jobBudget.innerText = activeJob.budget || '';
 
+      // Client Trust Audit
+      if (activeJob.clientStats) {
+        const stats = activeJob.clientStats;
+        auditMetrics.innerText = `${stats.rating} rating • ${stats.hireRate} hire rate • ${stats.totalSpent} spent`;
+
+        if (stats.isRedFlag) {
+          auditBadge.className = 'audit-badge warning';
+          auditBadge.innerText = 'Caution: Red Flag';
+          auditWarning.style.display = 'block';
+          auditWarning.innerText = `⚠️ ${stats.flagReason}`;
+        } else {
+          auditBadge.className = 'audit-badge';
+          auditBadge.innerText = 'High Trust Client';
+          auditWarning.style.display = 'none';
+        }
+      }
+
       skillsRow.innerHTML = '';
       if (activeJob.skills && activeJob.skills.length > 0) {
         activeJob.skills.slice(0, 4).forEach(s => {
@@ -222,7 +326,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       }
 
-      statusText.innerText = 'Job details detected';
+      const qCount = activeJob.screeningQuestions ? activeJob.screeningQuestions.length : 0;
+      questionCountNumber.innerText = qCount.toString();
+
+      statusText.innerText = 'Job details & client audit loaded';
       emptyState.style.display = 'none';
       jobView.style.display = 'flex';
       generatePitch(activeJob, currentTone);

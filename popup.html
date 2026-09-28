@@ -51,6 +51,15 @@
 
       <!-- Job View -->
       <div class="job-view" id="jobView" style="display: none;">
+        <!-- Client Trust Audit Banner -->
+        <div class="client-audit-card" id="clientAuditCard">
+          <div class="audit-top">
+            <div class="audit-badge" id="auditBadge">High Trust Client</div>
+            <div class="audit-metrics" id="auditMetrics">4.9 rating • 78% hire rate • $45k spent</div>
+          </div>
+          <div class="audit-warning" id="auditWarning" style="display: none;"></div>
+        </div>
+
         <!-- Job Card -->
         <div class="job-card">
           <div class="job-top">
@@ -60,46 +69,60 @@
           <div class="skills-row" id="skillsRow"></div>
         </div>
 
-        <!-- Tone Selector Tabs -->
-        <div class="tone-tabs">
-          <button class="tone-tab active" data-tone="concise">Concise</button>
-          <button class="tone-tab" data-tone="technical">Technical</button>
-          <button class="tone-tab" data-tone="results">ROI & Results</button>
+        <!-- Section Switcher Tabs -->
+        <div class="view-switch-tabs">
+          <button class="switch-tab active" id="tabProposalBtn">Proposal Pitch</button>
+          <button class="switch-tab" id="tabQuestionsBtn">Screening Questions (<span id="questionCountNumber">0</span>)</button>
         </div>
 
-        <!-- Proposal Output Box -->
-        <div class="proposal-container">
-          <div class="proposal-header">
-            <span class="proposal-label">Generated Proposal</span>
-            <span class="word-count" id="wordCount">0 words</span>
+        <!-- View 1: Proposal Pitch View -->
+        <div id="proposalSection">
+          <!-- Tone Selector Tabs -->
+          <div class="tone-tabs">
+            <button class="tone-tab active" data-tone="concise">Concise</button>
+            <button class="tone-tab" data-tone="technical">Technical</button>
+            <button class="tone-tab" data-tone="results">ROI & Results</button>
           </div>
-          <textarea id="proposalOutput" class="proposal-textarea" rows="8" placeholder="Drafting proposal..."></textarea>
+
+          <!-- Proposal Output Box -->
+          <div class="proposal-container">
+            <div class="proposal-header">
+              <span class="proposal-label">Drafted Pitch</span>
+              <span class="word-count" id="wordCount">0 words</span>
+            </div>
+            <textarea id="proposalOutput" class="proposal-textarea" rows="7" placeholder="Drafting proposal..."></textarea>
+          </div>
+
+          <!-- Action Grid -->
+          <div class="action-grid">
+            <button class="action-btn action-primary" id="copyProposalBtn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span>Copy Proposal</span>
+            </button>
+            <button class="action-btn action-secondary" id="regenerateBtn" title="Draft alternative version">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              <span>Regenerate</span>
+            </button>
+            <button class="action-btn action-secondary" id="profileSettingsBtn" title="Customize portfolio & name">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              <span>Profile</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Action Grid -->
-        <div class="action-grid">
-          <button class="action-btn action-primary" id="copyProposalBtn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            <span>Copy Proposal</span>
-          </button>
-          <button class="action-btn action-secondary" id="regenerateBtn" title="Draft alternative version">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="23 4 23 10 17 10"/>
-              <polyline points="1 20 1 14 7 14"/>
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-            </svg>
-            <span>Regenerate</span>
-          </button>
-          <button class="action-btn action-secondary" id="profileSettingsBtn" title="Customize portfolio & name">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
-            <span>Profile</span>
-          </button>
+        <!-- View 2: Screening Questions View -->
+        <div id="questionsSection" style="display: none;">
+          <div class="questions-list" id="questionsList"></div>
         </div>
       </div>
     </main>
@@ -108,7 +131,7 @@
     <footer class="app-footer">
       <div class="pro-banner" id="footerBanner">
         <span>Free tier: 3 proposals / day</span>
-        <a href="#" id="proUpgradeLink" class="pro-link">Upgrade to Lifetime</a>
+        <a href="#" id="proUpgradeLink" class="pro-link">Upgrade to Lifetime ($4.99)</a>
       </div>
     </footer>
 
@@ -116,38 +139,39 @@
     <div class="modal-backdrop" id="settingsModal" style="display: none;">
       <div class="modal-box">
         <button class="modal-close" id="settingsCloseBtn">&times;</button>
-        <h2>Your Profile Details</h2>
-        <p class="modal-desc">These are automatically woven into your tailored proposals.</p>
+        <h2>Profile & Bio Details</h2>
+        <p class="modal-desc">ProposalPilot weaves these details directly into your drafted proposals.</p>
         <div class="settings-form">
-          <label class="settings-label">Your Name</label>
+          <label class="settings-label">Your Full Name</label>
           <input type="text" id="settingName" class="settings-input" placeholder="Joshua Jaimon">
 
-          <label class="settings-label">Specialty / Role</label>
-          <input type="text" id="settingRole" class="settings-input" placeholder="Full-Stack Developer & Scraper">
+          <label class="settings-label">Specialty / Role Title</label>
+          <input type="text" id="settingRole" class="settings-input" placeholder="Full-Stack Engineer & Automation Specialist">
 
-          <label class="settings-label">Portfolio / Case Study URL</label>
+          <label class="settings-label">Portfolio / GitHub / Case Study URL</label>
           <input type="text" id="settingPortfolio" class="settings-input" placeholder="https://github.com/joshuajaimon7">
 
-          <button class="primary-btn" id="saveSettingsBtn" style="margin-top: 10px; width: 100%;">Save Profile</button>
+          <button class="primary-btn" id="saveSettingsBtn" style="margin-top: 10px; width: 100%;">Save Details</button>
         </div>
       </div>
     </div>
 
-    <!-- Upgrade Modal -->
+    <!-- Upgrade Modal (High Conversion Funnel) -->
     <div class="modal-backdrop" id="upgradeModal" style="display: none;">
       <div class="modal-box">
         <button class="modal-close" id="modalCloseBtn">&times;</button>
         <h2>ProposalPilot Pro</h2>
-        <p class="modal-desc">Draft unlimited high-converting proposals with custom tone presets and personalized portfolio integration.</p>
+        <p class="modal-desc">Stop burning $30/month on wasted Upwork Connects. Win high-paying clients with custom-tailored proposals in seconds.</p>
         <ul class="modal-perks">
-          <li>Unlimited proposals every day</li>
+          <li>Unlimited proposals across all job boards</li>
+          <li>Screening Question 1-Click Auto-Answerer</li>
+          <li>Client Red-Flag & Connects Safety Scanner</li>
           <li>All tone presets (Concise, Technical, ROI)</li>
-          <li>Custom portfolio & bio injection</li>
-          <li>100% private and on-device</li>
+          <li>Lifetime license with future updates</li>
         </ul>
         <div class="price-tag">
           <span class="price-val">$4.99</span>
-          <span class="price-period">one-time payment</span>
+          <span class="price-period">one-time payment (saves 100+ connects)</span>
         </div>
         <button class="checkout-btn" id="startCheckoutBtn">Buy Lifetime License ($4.99)</button>
 

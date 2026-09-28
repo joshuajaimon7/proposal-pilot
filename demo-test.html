@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ProposalPilot - Test Grounds (Upwork Job Simulation)</title>
+  <title>ProposalPilot - Test Grounds (Upwork Simulation)</title>
   <style>
     :root {
       --bg: #000000;
@@ -56,22 +56,28 @@
       border-radius: 4px;
     }
 
-    /* Job Card */
+    /* Upwork Simulated Layout */
+    .job-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
     .job-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 28px;
+      padding: 24px;
     }
-    .job-meta-top {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-      display: flex;
-      gap: 12px;
+    .client-sidebar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      height: fit-content;
     }
+
     .job-title {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
       color: var(--text);
       margin-bottom: 12px;
@@ -79,16 +85,12 @@
     }
     .job-budget-row {
       display: flex;
-      gap: 20px;
-      padding: 12px 0;
+      gap: 18px;
+      padding: 10px 0;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
-      font-size: 13px;
-    }
-    .budget-label {
-      color: var(--text-muted);
-      font-size: 11.5px;
+      margin-bottom: 18px;
+      font-size: 12.5px;
     }
     .budget-val {
       font-weight: 600;
@@ -96,28 +98,81 @@
     }
     .job-description {
       color: var(--text-muted);
-      font-size: 14px;
+      font-size: 13.5px;
       line-height: 1.6;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
     .skills-header {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .skills-list {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
+      margin-bottom: 24px;
     }
     .skill-badge {
       background: var(--surface-elevated);
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      font-size: 12px;
-      padding: 4px 10px;
+      font-size: 11.5px;
+      padding: 3px 8px;
       border-radius: 4px;
+    }
+
+    /* Client Sidebar */
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .client-stat-item {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .stat-strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Questions & Application box */
+    .application-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 20px;
+    }
+    .screening-box {
+      margin-bottom: 20px;
+      padding: 14px;
+      background: var(--surface-elevated);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .question-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .textarea-box {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border-medium);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      resize: vertical;
     }
   </style>
 </head>
@@ -126,59 +181,84 @@
     <div class="header-banner">
       <div>
         <h1>ProposalPilot Test Grounds</h1>
-        <p>Click the ProposalPilot icon in your Chrome toolbar to generate a tailored pitch for this job post.</p>
+        <p>Click the ProposalPilot icon in your toolbar to see the Client Trust Score, generated proposals, and auto-answered screening questions.</p>
       </div>
       <span class="badge-test">Test Workspace</span>
     </div>
 
-    <!-- Simulated Upwork Job Posting -->
-    <div class="job-card">
-      <div class="job-meta-top">
-        <span>Posted 32 minutes ago</span>
-        <span>•</span>
-        <span>Worldwide</span>
-        <span>•</span>
-        <span>Payment Verified</span>
-      </div>
+    <div class="job-layout">
+      <!-- Main Job Details -->
+      <div class="job-card">
+        <h1 class="job-title" data-test="JobTitle">Full-Stack Engineer for Automated Web Data Pipeline & React Dashboard</h1>
 
-      <h1 class="job-title" data-test="JobTitle">Full-Stack Developer for Automated Web Data Pipeline & React Dashboard</h1>
-
-      <div class="job-budget-row">
-        <div>
-          <div class="budget-label">Project Budget</div>
-          <div class="budget-val" data-test="BudgetAmount">$1,500 Fixed Price</div>
+        <div class="job-budget-row">
+          <div>
+            <div style="color: var(--text-muted); font-size: 11px;">Fixed Budget</div>
+            <div class="budget-val" data-test="BudgetAmount">$1,500 Fixed Price</div>
+          </div>
+          <div>
+            <div style="color: var(--text-muted); font-size: 11px;">Timeline</div>
+            <div style="font-weight: 600; color: var(--text);">2-3 Weeks</div>
+          </div>
         </div>
-        <div>
-          <div class="budget-label">Experience Level</div>
-          <div style="font-weight: 600; color: var(--text);">Intermediate / Expert</div>
+
+        <div class="job-description" data-test="JobDescription">
+          We are looking for a skilled developer to build a client-side web scraper and analytics dashboard.
+          Our team currently wastes hours manually collecting data from competitor catalogs. We need an automated extension or script that extracts tables to clean CSV and formats everything cleanly.
+          <br><br>
+          Requirements:
+          <br>• High-performance JavaScript / React implementation
+          <br>• Accurate CSV/JSON parsing with proper RFC comma & quote escaping
+          <br>• Clean, well-documented code ready for immediate production deployment
         </div>
-        <div>
-          <div class="budget-label">Project Type</div>
-          <div style="color: var(--text-muted);">One-time Project</div>
+
+        <div class="skills-header">Skills and Expertise</div>
+        <div class="skills-list">
+          <span class="skill-badge" data-test="Skill">React</span>
+          <span class="skill-badge" data-test="Skill">JavaScript</span>
+          <span class="skill-badge" data-test="Skill">Web Scraping</span>
+          <span class="skill-badge" data-test="Skill">Chrome Extensions</span>
+          <span class="skill-badge" data-test="Skill">CSV Export</span>
         </div>
       </div>
 
-      <div class="job-description" data-test="JobDescription">
-        We are seeking a responsive developer to build a client-side data extraction pipeline and clean analytics dashboard.
-        <br><br>
-        Currently, our team manually collects data from competitor websites and imports it into spreadsheets. We need an automated tool or browser script that can detect tables, parse clean CSVs, and present the metrics in a lightweight React dashboard.
-        <br><br>
-        Key requirements:
-        <br>• Clean code with TypeScript or modern JavaScript
-        <br>• Reliable CSV/JSON formatting without breaking commas or quotes
-        <br>• Fast delivery: ready to start immediately
-        <br><br>
-        Please mention your relevant experience with web scraping, browser extensions, or dashboard builds.
+      <!-- Client Profile Sidebar (Trust Metrics) -->
+      <div class="client-sidebar" data-client-info>
+        <div class="sidebar-title">About the Client</div>
+        <div class="client-stat-item">
+          <span class="stat-strong" data-test="payment-verified">Payment Method Verified</span>
+        </div>
+        <div class="client-stat-item">
+          Rating: <span class="stat-strong">4.9 of 5 stars (38 reviews)</span>
+        </div>
+        <div class="client-stat-item">
+          Total Spent: <span class="stat-strong">$45k total spent</span>
+        </div>
+        <div class="client-stat-item">
+          Hire Rate: <span class="stat-strong">78% hire rate</span> (32 hires)
+        </div>
+        <div class="client-stat-item">
+          Location: United States (Dallas, TX)
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Form with Screening Questions -->
+    <div class="application-section">
+      <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 14px;">Client Screening Questions</h3>
+
+      <div class="screening-box">
+        <div class="question-title" data-test="question">Question 1: What part of this data pipeline project do you anticipate will take the longest and why?</div>
+        <textarea class="textarea-box" rows="2" placeholder="Answer here or auto-answer with ProposalPilot..."></textarea>
       </div>
 
-      <div class="skills-header">Skills and Expertise</div>
-      <div class="skills-list">
-        <span class="skill-badge" data-test="Skill">React</span>
-        <span class="skill-badge" data-test="Skill">JavaScript</span>
-        <span class="skill-badge" data-test="Skill">Web Scraping</span>
-        <span class="skill-badge" data-test="Skill">Chrome Extensions</span>
-        <span class="skill-badge" data-test="Skill">CSV Export</span>
+      <div class="screening-box">
+        <div class="question-title" data-test="question">Question 2: Do you have past experience with automated CSV data extraction tools or extensions?</div>
+        <textarea class="textarea-box" rows="2" placeholder="Answer here or auto-answer with ProposalPilot..."></textarea>
       </div>
+
+      <h3 style="font-size: 15px; font-weight: 600; margin-top: 20px; margin-bottom: 10px;">Cover Letter</h3>
+      <textarea id="cover-letter-textarea" class="textarea-box" rows="6" placeholder="Your proposal will be inserted here..."></textarea>
     </div>
   </div>
 
