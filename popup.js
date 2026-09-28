@@ -93,13 +93,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   modalCloseBtn.addEventListener('click', hideUpgrade);
 
   // Buy License
+  const CHECKOUT_URL = "https://micro-software-lab.lemonsqueezy.com/checkout/buy/59f3de24-6e8e-4f68-8066-294354e1a357";
   startCheckoutBtn.addEventListener('click', () => {
-    if (confirm('Simulate purchasing ProposalPilot Pro lifetime license?')) {
-      chrome.storage.local.set({ proposal_pilot_is_pro: true }, () => {
-        alert('ProposalPilot Pro license activated.');
-        location.reload();
-      });
-    }
+    chrome.tabs.create({ url: CHECKOUT_URL });
   });
 
   // Activate Key
