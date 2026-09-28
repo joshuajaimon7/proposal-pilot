@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProposalPilot</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-mark">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">
+            <span>ProposalPilot</span>
+            <span class="badge-pro" id="proHeaderBadge">PRO</span>
+          </div>
+          <div class="brand-sub">Job Proposal Copilot</div>
+        </div>
+      </div>
+      <button class="upgrade-btn" id="upgradeBtn">Upgrade</button>
+    </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar" id="statusBar">
+      <div class="status-indicator" id="statusIndicator"></div>
+      <span id="statusText">Scanning active job post...</span>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <h3>No Job Posting Detected</h3>
+        <p>Open any Upwork or LinkedIn job post, or open our test grounds to generate a proposal.</p>
+        <button class="primary-btn" id="openDemoBtn">Open Test Grounds</button>
+      </div>
+
+      <!-- Job View -->
+      <div class="job-view" id="jobView" style="display: none;">
+        <!-- Job Card -->
+        <div class="job-card">
+          <div class="job-top">
+            <div class="job-title" id="jobTitle">Job Title</div>
+            <span class="job-budget" id="jobBudget"></span>
+          </div>
+          <div class="skills-row" id="skillsRow"></div>
+        </div>
+
+        <!-- Tone Selector Tabs -->
+        <div class="tone-tabs">
+          <button class="tone-tab active" data-tone="concise">Concise</button>
+          <button class="tone-tab" data-tone="technical">Technical</button>
+          <button class="tone-tab" data-tone="results">ROI & Results</button>
+        </div>
+
+        <!-- Proposal Output Box -->
+        <div class="proposal-container">
+          <div class="proposal-header">
+            <span class="proposal-label">Generated Proposal</span>
+            <span class="word-count" id="wordCount">0 words</span>
+          </div>
+          <textarea id="proposalOutput" class="proposal-textarea" rows="8" placeholder="Drafting proposal..."></textarea>
+        </div>
+
+        <!-- Action Grid -->
+        <div class="action-grid">
+          <button class="action-btn action-primary" id="copyProposalBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span>Copy Proposal</span>
+          </button>
+          <button class="action-btn action-secondary" id="regenerateBtn" title="Draft alternative version">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"/>
+              <polyline points="1 20 1 14 7 14"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+            <span>Regenerate</span>
+          </button>
+          <button class="action-btn action-secondary" id="profileSettingsBtn" title="Customize portfolio & name">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Profile</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="pro-banner" id="footerBanner">
+        <span>Free tier: 3 proposals / day</span>
+        <a href="#" id="proUpgradeLink" class="pro-link">Upgrade to Lifetime</a>
+      </div>
+    </footer>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="settingsModal" style="display: none;">
+      <div class="modal-box">
+        <button class="modal-close" id="settingsCloseBtn">&times;</button>
+        <h2>Your Profile Details</h2>
+        <p class="modal-desc">These are automatically woven into your tailored proposals.</p>
+        <div class="settings-form">
+          <label class="settings-label">Your Name</label>
+          <input type="text" id="settingName" class="settings-input" placeholder="Joshua Jaimon">
+
+          <label class="settings-label">Specialty / Role</label>
+          <input type="text" id="settingRole" class="settings-input" placeholder="Full-Stack Developer & Scraper">
+
+          <label class="settings-label">Portfolio / Case Study URL</label>
+          <input type="text" id="settingPortfolio" class="settings-input" placeholder="https://github.com/joshuajaimon7">
+
+          <button class="primary-btn" id="saveSettingsBtn" style="margin-top: 10px; width: 100%;">Save Profile</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upgrade Modal -->
+    <div class="modal-backdrop" id="upgradeModal" style="display: none;">
+      <div class="modal-box">
+        <button class="modal-close" id="modalCloseBtn">&times;</button>
+        <h2>ProposalPilot Pro</h2>
+        <p class="modal-desc">Draft unlimited high-converting proposals with custom tone presets and personalized portfolio integration.</p>
+        <ul class="modal-perks">
+          <li>Unlimited proposals every day</li>
+          <li>All tone presets (Concise, Technical, ROI)</li>
+          <li>Custom portfolio & bio injection</li>
+          <li>100% private and on-device</li>
+        </ul>
+        <div class="price-tag">
+          <span class="price-val">$4.99</span>
+          <span class="price-period">one-time payment</span>
+        </div>
+        <button class="checkout-btn" id="startCheckoutBtn">Buy Lifetime License ($4.99)</button>
+
+        <div class="license-box">
+          <div class="license-title">Already purchased? Activate key:</div>
+          <div class="license-input-row">
+            <input type="text" id="licenseKeyInput" class="license-input" placeholder="Paste license key...">
+            <button class="license-activate-btn" id="activateKeyBtn">Activate</button>
+          </div>
+          <div class="license-status" id="licenseStatus"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
